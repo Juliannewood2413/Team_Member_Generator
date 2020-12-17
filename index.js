@@ -15,7 +15,7 @@ const start = () => {
     inquirer.prompt({
         type: "list",
         message: "What would you like to do?",
-        choices: ["Add a department, role, or employee", "View a department, role, or employee", "Update a department, role, or employee", "Exit"],
+        choices: ["Add a department, role, or employee", "View a department, role, or employee", "Update a role or employee", "Exit"],
         name: "action"
     }).then(({action}) => {
         switch(action) {
@@ -23,7 +23,7 @@ const start = () => {
                 return addAction();
             case "View a department, role, or employee":
                 return viewAction();
-            case "Update a department, role, or employee":
+            case "Update a role or employee":
                 return updateAction();
             case "Exit":
                 connection.end();
@@ -206,29 +206,14 @@ const viewDepartment = () => {
       connection.query(query, { department: answer.department }, (err, res) => {
         res.forEach(({ department, first_name, last_name }) => {
           console.log(
-            `Department: ${department} || First Name: ${first_name} || Last Name: ${last_name}`
+            
+            `-----------------------------------------------------------------------
+            Department: ${department} || First Name: ${first_name} || Last Name: ${last_name}`
           );
         }); 
         start();
       });
-    //   connection.query('SELECT * FROM department', (err, res) => {
-    //     if (err) throw err;
-    //     console.log(res);
-    // });
-    //   connection.query(
-    //     'SELECT * FROM  WHERE ?',
-    //     // { department: answer.department.employee },
-    //     (err, res) => { 
-    //         console.log(res)
-    //       if (res[0]) {
-    //         console.log(
-    //             // `First Name: ${res[0].first_name} || Last Name: ${res[1].last_name} || Title: ${res[2].title} || Salary: ${res[3].salary}}`
-    //         );
-    //       } else {
-    //         console.error(`No results for ${answer.department}`);
-    //       }
-    // }
-    // );
+  
     start();
     });
 };
@@ -239,6 +224,7 @@ const viewRole = () => {
     connection.query('SELECT * FROM roles', (err, res) => {
         if (err) throw err;
         console.log(res);
+        start();
     })
 };
 
@@ -247,20 +233,59 @@ const viewEmployee = () => {
       if (err) throw err;
       console.log( res
         //   `ID: ${res.id} || First Name: ${res.first_name} || Last Name: ${res.last_name} || Title: ${res.tite} || Department: ${res.department} || Salary: ${res.salary}`
-      );
+        );
+        start();
   })
-  start();
 };
 
 
 //Functions for update choices
 const updateRole = () => {
+  inquirer.prompt({
+    type: "list",
+    message: "What would you like to do?",
+    choices: ["Delete a role", "Change the role information", "Go Back"],
+    name: "roleUpdateChoice"
+  }).then(({roleUpdateChoice}) => {
+    switch (roleUpdateChoice) {
+        case "Delete a role":
+            return deleteRole();
+        case "Change the role information":
+            return addRole();
+        case "Go Back":
+            return start();
+    }
+})
 
 };
 
 const updateEmployee = () => {
-
+  inquirer.prompt({
+    type: "list",
+    message: "What would you like to do?",
+    choices: ["Delete an employee", "Change the employee information", "Go Back"],
+    name: "employeeUpdateChoice"
+  }).then(({employeeUpdateChoice}) => {
+    switch (employeeUpdateChoice) {
+        case "Delete an employee":
+            return deleteEmployee();
+        case "Change the employee information":
+            return addEmployee();
+        case "Go Back":
+            return start();
+    }
+})
 };
+
+//Delete functions 
+
+const deleteRole = () => {
+
+}
+
+const deleteEmployee = () => {
+
+}
 
 
 //Connect to the DB
