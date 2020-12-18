@@ -4,53 +4,12 @@ CREATE DATABASE employee_tracker_DB;
 
 USE employee_tracker_DB;
 
-CREATE TABLE employee(
-id INT AUTO_INCREMENT NOT NULL PRIMARY KEY, 
-first_name VARCHAR(30),
-last_name VARCHAR(30),
-title VARCHAR(30),
-department VARCHAR(30),
-salary INT 
--- role_id INT, -- foreign key
--- manager_id INT
-);
-
- INSERT INTO employee (first_name, last_name, title, department, salary)
-VALUE 
-("Kevin", "Sullivan", "Sales Lead", "Sales", 65000),
-("Judy", "Jones", "Salesperson", "Sales", 55000),
-("Maureen", "Porter", "Lead Engineer", "Engineering", 100000),
-("Daniel", "Beezley", "Software Engineer", "Engineering", 90000),
-("David", "Gillette", "Account Manager", "Finance", 120000),
-("Chris", "Homer", "Accountant", "Finance", 80000),
-("Barbara", "Archuleta", "Lawyer", "Legal", 150000);
-
-SELECT * FROM employee;
-
-CREATE TABLE roles (
-id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-title VARCHAR(30),
-department VARCHAR(30),
-salary INT
-);
-
-INSERT INTO roles (title, department, salary)
-VALUES ("Sales Lead", "Sales", 65000),
-("Salesperson", "Sales", 55000),
-("Lead Engineer", "Engineering", 100000),
-("Software Engineer", "Engineering", 90000),
-("Account Manager", "Finance", 120000),
-("Accountant", "Finance", 80000),
-("Lawyer", "Legal", 150000);
-
-SELECT * FROM roles;
-
 CREATE TABLE department(
 id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-department VARCHAR(30)
+name VARCHAR(30)
 );
 
-INSERT INTO department (department)
+INSERT INTO department (name)
 VALUE ("Sales"),
 ("Engineering"),
 ("Finance"),
@@ -58,6 +17,47 @@ VALUE ("Sales"),
 
 SELECT * FROM department;
 
+
+CREATE TABLE role (
+  id INTEGER NOT NULL auto_increment PRIMARY KEY,
+  title VARCHAR(30),
+  salary DECIMAL,
+  department_id INTEGER,
+  FOREIGN KEY (department_id) REFERENCES department(id)
+);
+
+INSERT INTO role (title, salary, department_id) VALUES ("Sales Lead", 65000, 1);
+INSERT INTO role (title, salary, department_id) VALUES ("Salesperson", 50000, 1);
+INSERT INTO role (title, salary, department_id) VALUES ("Lead Engineer", 100000, 2);
+INSERT INTO role (title, salary, department_id) VALUES ("Engineer", 900000, 2);
+INSERT INTO role (title, salary, department_id) VALUES ("Account Manager", 120000, 3);
+INSERT INTO role (title, salary, department_id) VALUES ("Accountant", 80000, 3);
+INSERT INTO role (title, salary, department_id) VALUES ("Lawyer", 150000, 4);
+
+SELECT * FROM role;
+
+CREATE TABLE employee (
+  id INTEGER NOT NULL auto_increment PRIMARY KEY,
+  first_name VARCHAR(30),
+  last_name VARCHAR(30),
+  role_id INTEGER,
+  manager_id INTEGER,
+  FOREIGN KEY (role_id) REFERENCES role(id),
+  FOREIGN KEY (manager_id) REFERENCES role(id)
+);
+
+ INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUE 
+("Kevin", "Sullivan", 1, null),
+("Judy", "Jones", 1, 1),
+("Maureen", "Porter", 2, null),
+("Daniel", "Beezley", 2, 2),
+("David", "Gillette", 3, null),
+("Chris", "Homer", 3, 3),
+("Barbara", "Archuleta", 4,  null);
+
+
+SELECT * FROM employee;
 
 
 
