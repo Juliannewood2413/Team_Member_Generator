@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
+const logo = require('asciiart-logo');
 
 const connection = mysql.createConnection({
     host:'localhost',
@@ -12,6 +13,22 @@ const connection = mysql.createConnection({
 
 
 //FUNCTIONS
+function displayLogo() {
+  console.log(
+      logo({
+          name: 'Employee Management System',
+          lineChars: 10,
+          padding: 2,
+          margin: 3,
+          borderColor: 'white',
+          logoColor: 'white',
+          textColor: 'white',
+      })
+      .render()
+  );
+}
+
+displayLogo();
 // start function to decide which action the user would like to perform
 const start = () => {
     inquirer.prompt({
@@ -204,8 +221,8 @@ const viewDepartment = () => {
     }).then(({answer}) => {
       switch (answer) {
           case "Sales":
-              connection.query('SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name AS department FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id', (err, res) => {
-                      console.table(res.filter((name) => department == name.department));
+              connection.query('SELECT employee.first_name, employee.last_name, employee.role_id FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON employee.role_id = department.id = ?', (err, res) => {
+                      console.table(res.map((name) => department == name.department));
                       start();
                     });
               
