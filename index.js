@@ -221,7 +221,7 @@ const viewDepartment = () => {
     }).then(({department}) => {
       switch (department) {
           case "Sales":
-              var query = `
+              let query = `
               SELECT employee.id, first_name, last_name, role.title, role.salary, name
               FROM employee
               LEFT JOIN role
@@ -229,18 +229,50 @@ const viewDepartment = () => {
               LEFT JOIN department
               ON department_id = department.id`
               connection.query(query, (err, res) => {
-                      // console.log(res);
-                      //console.table(res.filter((name) => department == name.department)); //should I use .map, create empty array, push to array, then call that as the response
                       console.table(res.filter((variable) => department == variable.name));
                       start();
                     });
-              
-          // case "Engineering":
-          //     return ();
-          // case "Finance":
-          //     return ();
-          // case "Legal":
-          //     return start();
+                    break;
+          case "Engineering":
+              let eQuery = `
+              SELECT employee.id, first_name, last_name, role.title, role.salary, name
+              FROM employee
+              LEFT JOIN role
+              ON role_id = role.id
+              LEFT JOIN department
+              ON department_id = department.id`
+              connection.query(eQuery, (err, res) => {
+                      console.table(res.filter((variable) => department == variable.name));
+                      start();
+                    });
+                    break;
+          case "Finance":
+            let fQuery = `
+            SELECT employee.id, first_name, last_name, role.title, role.salary, name
+            FROM employee
+            LEFT JOIN role
+            ON role_id = role.id
+            LEFT JOIN department
+            ON department_id = department.id`
+            connection.query(fQuery, (err, res) => {
+                  console.log(res)
+                    console.table(res.filter((variable) => department == variable.name));
+                    start();
+                  });
+                  break;
+          case "Legal":
+            let lQuery = `
+            SELECT employee.id, first_name, last_name, role.title, role.salary, name
+            FROM employee
+            LEFT JOIN role
+            ON role_id = role.id
+            LEFT JOIN department
+            ON department_id = department.id`
+            connection.query(lQuery, (err, res) => {
+                    console.table(res.filter((variable) => department == variable.name));
+                    start();
+                  });
+                  break;
       }
   })
   
@@ -298,7 +330,7 @@ const updateEmployee = () => {
         case "Delete an employee":
             return deleteEmployee();
         case "Change the employee information":
-            return addEmployee(); // change this code
+            return addEmployee(); 
         case "Go Back":
             return start();
     }
@@ -322,8 +354,20 @@ const deleteRole = () => {
         },
         message: "What role would you like to remove from the database?"
       }
-    ]);
-  }) // delete role based on role ID?
+    ]).then(({roleList}) => {
+      connection.query('DELETE FROM role WHERE ?', 
+      {
+        title: roleList
+      },
+       function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+      }
+      );
+    
+    })
+  }) 
 }
 
 const deleteEmployee = () => {
@@ -353,9 +397,10 @@ const deleteEmployee = () => {
         }
         );
       
-      })//delete employee based on last name?
+      })
   })
 }
+
 
 
 //Connect to the DB
