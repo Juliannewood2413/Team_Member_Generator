@@ -151,7 +151,7 @@ const addRole = () => {
           name: "salary"
         },
         {
-          message: "What department is the new role under? 1 = sales, 2 = engineering, 3 = finance, 4 = legal. If the new role is under a new department, please enter a new numeric value",
+          message: "What department is the new role under? 1 = Sales, 2 = Engineering, 3 = Accounting, 4 = Legal. If the new role is under a new department, please enter a new numeric value",
           name: "departmentID"
         }
     ]) .then((answer) => {
@@ -189,7 +189,7 @@ const addEmployee = () => {
       {
         name: 'role_id',
         type: 'input',
-        message: "What is the employee's role ID? Sales = 1, Engineering = 2, Finance = 3, Legal = 4",
+        message: "What is the employee's role ID? Sales = 1, Engineering = 2, Accounting = 3, Legal = 4",
       }
     ])
     .then((answer) => { 
@@ -209,7 +209,7 @@ const addEmployee = () => {
       );
     });
 };
-var initialDepartments = ["Sales", "Engineering", "Finance", "Legal"]
+var initialDepartments = ["Sales", "Engineering", "Accounting", "Legal"]
 //Functions for view choices
 const viewDepartment = () => {
     inquirer
@@ -246,7 +246,7 @@ const viewDepartment = () => {
                       start();
                     });
                     break;
-          case "Finance":
+          case "Accounting":
             let fQuery = `
             SELECT employee.id, first_name, last_name, role.title, role.salary, name
             FROM employee
@@ -361,7 +361,7 @@ const deleteRole = () => {
       },
        function (err, res) {
         if (err) throw err;
-        console.table(res);
+        console.log("Delete Successful!");
         start();
       }
       );
@@ -392,7 +392,7 @@ const deleteEmployee = () => {
         },
          function (err, res) {
           if (err) throw err;
-          console.table(res);
+          console.log("Delete Successful!");
           start();
         }
         );

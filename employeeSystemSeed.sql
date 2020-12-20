@@ -12,10 +12,10 @@ name VARCHAR(30)
 INSERT INTO department (name)
 VALUE ("Sales"),
 ("Engineering"),
-("Finance"),
+("Accounting"),
 ("Legal");
 
-SELECT * FROM department;
+SELECT * FROM department WHERE id = 3;
 
 
 CREATE TABLE role (
@@ -34,7 +34,7 @@ INSERT INTO role (title, salary, department_id) VALUES ("Account Manager", 12000
 INSERT INTO role (title, salary, department_id) VALUES ("Accountant", 80000, 3);
 INSERT INTO role (title, salary, department_id) VALUES ("Lawyer", 150000, 4);
 
-SELECT * FROM role;
+SELECT * FROM role WHERE department_id = 3;
 
 CREATE TABLE employee (
   id INTEGER NOT NULL auto_increment PRIMARY KEY,
@@ -58,6 +58,3 @@ VALUE
 
 
 SELECT * FROM employee;
-
-
-
