@@ -68,7 +68,7 @@ const addAction = () => {
                 return addRole();
             case "Employee":
                 return addEmployee();
-            case "Go Back":
+            case "Go back":
                 return start();
         }
     })
@@ -90,7 +90,7 @@ const viewAction = () => {
                 return viewRole();
             case "Employee":
                 return viewEmployee();
-            case "Go Back":
+            case "Go back":
                 return start();
         }
     })
@@ -110,7 +110,7 @@ const updateAction = () => {
                 return updateRole();
             case "Employee":
                 return updateEmployee();
-            case "Go Back":
+            case "Go back":
                 return start();
         }
     })
@@ -151,7 +151,7 @@ const addRole = () => {
           name: "salary"
         },
         {
-          message: "What department is the new role under? 1 = sales, 2 = engineering, 3 = finance, 4 = legal<br>If the new role is under a new department, please enter a new numeric value",
+          message: "What department is the new role under? 1 = sales, 2 = engineering, 3 = finance, 4 = legal. If the new role is under a new department, please enter a new numeric value",
           name: "departmentID"
         }
     ]) .then((answer) => {
@@ -187,7 +187,7 @@ const addEmployee = () => {
         message: 'Please enter the employees last name',
       },
       {
-        name: 'roleID',
+        name: 'role_id',
         type: 'input',
         message: "What is the employee's role ID? Sales = 1, Engineering = 2, Finance = 3, Legal = 4",
       }
@@ -198,7 +198,7 @@ const addEmployee = () => {
         {
           first_name: answer.first_name,
           last_name: answer.last_name,
-          role_id: answer.roleID
+          role_id: answer.role_id
         },
         (err) => {
           if (err) throw err;
@@ -209,7 +209,7 @@ const addEmployee = () => {
       );
     });
 };
-
+var initialDepartments = ["Sales", "Engineering", "Finance", "Legal"]
 //Functions for view choices
 const viewDepartment = () => {
     inquirer
@@ -217,12 +217,21 @@ const viewDepartment = () => {
       name: 'department',
       type: 'list',
       message: 'What department would you like to view?',
-      choices: ["Sales", "Engineering", "Finance", "Legal"]
-    }).then(({answer}) => {
-      switch (answer) {
+      choices: initialDepartments
+    }).then(({department}) => {
+      switch (department) {
           case "Sales":
-              connection.query('SELECT employee.first_name, employee.last_name, employee.role_id FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON employee.role_id = department.id = ?', (err, res) => {
-                      console.table(res.map((name) => department == name.department));
+              var query = `
+              SELECT employee.id, first_name, last_name, role.title, role.salary, name
+              FROM employee
+              LEFT JOIN role
+              ON role_id = role.id
+              LEFT JOIN department
+              ON department_id = department.id`
+              connection.query(query, (err, res) => {
+                      // console.log(res);
+                      //console.table(res.filter((name) => department == name.department)); //should I use .map, create empty array, push to array, then call that as the response
+                      console.table(res.filter((variable) => department == variable.name));
                       start();
                     });
               
@@ -314,14 +323,14 @@ const deleteRole = () => {
         message: "What role would you like to remove from the database?"
       }
     ]);
-  })
+  }) // delete role based on role ID?
 }
 
 const deleteEmployee = () => {
   connection.query('SELECT * FROM employee', (err, res) => {
    const employeeDelete =  inquirer.prompt([
       {
-        name: "employeeList",
+        name: "employeeDelete",
         type: "list",
         choices() {
           const employeeArray = [];
@@ -344,7 +353,7 @@ const deleteEmployee = () => {
         }
         );
       
-      })
+      })//delete employee based on last name?
   })
 }
 
